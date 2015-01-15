@@ -4,8 +4,8 @@ var assert = require("assert");
 var cell = require('./cell');
 describe('cell', function(){
     it('a cell can come to life', function(){
-      assert.equal(cell.alive, false);
+      assert.equal(cell.animate, false);
       cell.makeAlive();
-      assert.equal(cell.alive, true);
+      assert.equal(cell.animate, true);
     })
 })

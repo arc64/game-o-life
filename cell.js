@@ -3,7 +3,7 @@
 var cell = {
     alive: false,
 
-    makeAlive: function(){
+    animate: function(){
         this.alive = true;
     }
 };
