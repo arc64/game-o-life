@@ -1,11 +1,19 @@
 
 var assert = require("assert");
+var newCell = require('./cell');
 
-var cell = require('./cell');
 describe('cell', function(){
     it('a cell can come to life', function(){
-      assert.equal(cell.animate, false);
-      cell.makeAlive();
-      assert.equal(cell.animate, true);
-    })
+      var cell = newCell(false);
+      assert.equal(cell.isAlive(), false);
+      cell.animate();
+      assert.equal(cell.isAlive(), true);
+    });
+
+    it('a cell can die', function(){
+      var cell = newCell(true);
+      assert.equal(cell.isAlive(), true);
+      cell.die();
+      assert.equal(cell.isAlive(), false);
+    });
 })

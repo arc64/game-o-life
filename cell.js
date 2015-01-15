@@ -1,12 +1,26 @@
 
 //1) a cell can come to life
-var cell = {
-    alive: false,
+var cell = function(state) {
+    var liveness = state;
 
-    animate: function(){
-        this.alive = true;
+    return {
+
+        animate: function(){
+            liveness = true;
+        },
+
+        die: function(){
+            liveness = false;
+        },
+
+        isAlive: function(){
+            return liveness;
+        }
+
     }
 };
 
 // Export into module namespsce
 module.exports = cell;
+
+
