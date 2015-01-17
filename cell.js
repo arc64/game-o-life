@@ -11,12 +11,8 @@ var cell = function(state, x, y) {
 
     return {
 
-        animate: function(){
-            liveness = true;
-        },
-
-        die: function(){
-            liveness = false;
+        live: function(state){
+            liveness = state;
         },
 
         isAlive: function(){
