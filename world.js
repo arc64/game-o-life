@@ -5,13 +5,13 @@ var world = function(){
     var matrix = [];
 
     return {
-        generate: function(height, width) {
-            for (var i = 0; i < width; i++) {
-                var row = []
-                for (var j = 0; j < height; j++) {
-                    row[j] = cell(false);
+        generate: function(width, height) {
+            for (var y = 0; y < height; y++) {
+                var row = [];
+                for (var x = 0; x < width; x++) {
+                    row[x] = cell(false, x, y);
                 }
-                matrix[i] = row;
+                matrix[y] = row;
             }
             //console.log(matrix)
             return matrix;

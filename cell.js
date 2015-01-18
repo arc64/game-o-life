@@ -3,15 +3,16 @@
 //2) a cell can die
 var cell = function(state, x, y) {
     var liveness = state;
-    // A cell should know where on the board it is
-    var x = x;
-    var y = y;
+
     // A cell should know whether it has neighbours
     var neighbours = [];
 
     return {
+        // A cell should know where on the board it is
+        x: x,
+        y: y,
 
-        live: function(state){
+        changeState: function(state){
             liveness = state;
         },
 
