@@ -35,18 +35,54 @@ describe('world', function(){
     it('can generate a world of specific dimentions', function(){
         var ROWS = 2;
         var COLUMNS = 3;
-        var world = newWorld().generate(COLUMNS, ROWS); // x, y
-        assert.equal(world.length, 2); // Rows
-        assert.equal(world[0].length, 3); // Columns
+        var world = newWorld();
+        world.generate(COLUMNS, ROWS); // x, y
+        assert.equal(world.board.length, 2); // Rows
+        assert.equal(world.board[0].length, 3); // Columns
     });
     it('can generate a world with (dead) cells', function(){
-        var world = newWorld().generate(3,3);
-        assert.equal(typeof(world[0][0]), 'object');
-        assert.equal(world[2][2].isAlive(), false);
+        var world = newWorld();
+        world.generate(3,3);
+        assert.equal(typeof(world.board[0][0]), 'object');
+        assert.equal(world.board[2][2].isAlive(), false);
     });
+    it('can generate a world with a specific state', function(){
+        var world = newWorld();
+        world.generate(3,3);
+        assert.equal(world.board[2][0].isAlive(), false)
+        var cells = [];
+        cells.push(newCell(true, 0, 0));
+        cells.push(newCell(true, 1, 0));
+        cells.push(newCell(true, 2, 0));
+        world.populate(cells, true);
+        assert.equal(world.board[2][0].isAlive(), true);
+        assert.equal(world.board[0][2].isAlive(), false);
+    });
+    it('can generate the correct number of neighbours', function(){
+        var world = newWorld();
+        world.generate(3,3);
+        var middleCell = world.board[1][1];
+        var topLeft = world.board[0][0];
+        var middleRight = world.board[2][1];
+        assert.equal(middleCell.numberOfNeighbours(), 8);
+        assert.equal(topLeft.numberOfNeighbours(), 3);
+        assert.equal(middleRight.numberOfNeighbours(), 5);
+    });
+    it('a dead cell with 2 neighbours comes to life (birth)', function(){
+        var world = newWorld();
+        world.generate(3,3);
 
-    it('can kill cells with more than 2 neighbours', function(){
+        //Initial state
+        world.board[0][0].changeState(true);
+        world.board[1][1].changeState(true);
 
+        assert.equal(world.board[1][0].isAlive(), false);
+        assert.equal(world.board[0][1].isAlive(), false);
+        //world.showBoard();
+        world.tick();
+        //world.showBoard();
+        assert.equal(world.board[1][0].isAlive(), true);
+        assert.equal(world.board[0][1].isAlive(), true);
     });
 
 })
