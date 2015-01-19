@@ -29,8 +29,7 @@ var world = function(){
 
     var update = function(cells, state) {
         for (var i = 0; i < cells.length; i++) {
-            var cell = cells[i];
-            matrix[cell.x][cell.y].changeState(state);
+            cells[i].changeState(state);
         }
     };
     return {
@@ -47,32 +46,41 @@ var world = function(){
             calculateNeighbours();
         },
         tick: function() {
-            var cells = [];
+            var cellsToBirth = [];
+            var cellsToKill = [];
             for (var x = 0; x < matrix.length; x++) {
                 for (var y = 0; y < matrix.length; y++) {
                     var cell = matrix[x][y];
                     //3) a dead cell with 2 neighbours comes to life (birth)
                     if(!cell.isAlive() && cell.aliveNeighbours() >= 2) {
-                        cells.push(matrix[x][y]);
+                        cellsToBirth.push(cell);
                     }
-
+                    //4) a living cell with 1 or fewer neighbours dies from loneliness
+                    if(cell.isAlive() && cell.aliveNeighbours() <= 1) {
+                        cellsToKill.push(cell);
+                    }
+                    //5) a living cell with 4 or more neighbours dies from overcrowding
+                    if(cell.isAlive() && cell.aliveNeighbours() >= 4) {
+                        cellsToKill.push(cell);
+                    }
                 }
             }
-            update(cells, true);
+            update(cellsToBirth, true);
+            update(cellsToKill, false);
         },
         showBoard: function() {
             console.log("========================World========================");
             for (var x = 0; x < matrix.length; x++) {
-                var coords = "|  ", state = "|  ";
+                var coords = "| ";
                 for (var y = 0; y < matrix[0].length; y++) {
                     var cell = matrix[x][y];
                     var padding = "";
                     if(cell.isAlive()) padding = " ";
-                    coords += " "+cell.x +","+ cell.y + " " + cell.isAlive() + padding +"   |    ";
+                    //coords += " "+cell.x +","+ cell.y;
+                    coords += " " + cell.isAlive() + padding +" | ";
 
                 }
                 console.log(coords);
-                console.log(state);
             }
             console.log("========================"+matrix.length+'x'+matrix[0].length+"==========================");
         }

@@ -29,7 +29,7 @@ describe('cell', function(){
       cell.addNeighbour(aliveCell);
       assert.equal(cell.aliveNeighbours(), 1);
     });
-})
+});
 
 describe('world', function(){
     it('can generate a world of specific dimentions', function(){
@@ -50,11 +50,9 @@ describe('world', function(){
         var world = newWorld();
         world.generate(3,3);
         assert.equal(world.board[2][0].isAlive(), false)
-        var cells = [];
-        cells.push(newCell(true, 0, 0));
-        cells.push(newCell(true, 1, 0));
-        cells.push(newCell(true, 2, 0));
-        world.populate(cells, true);
+        world.board[0][0].changeState(true);
+        world.board[1][0].changeState(true);
+        world.board[2][0].changeState(true);
         assert.equal(world.board[2][0].isAlive(), true);
         assert.equal(world.board[0][2].isAlive(), false);
     });
@@ -68,6 +66,9 @@ describe('world', function(){
         assert.equal(topLeft.numberOfNeighbours(), 3);
         assert.equal(middleRight.numberOfNeighbours(), 5);
     });
+});
+
+describe('life', function(){
     it('a dead cell with 2 neighbours comes to life (birth)', function(){
         var world = newWorld();
         world.generate(3,3);
@@ -84,5 +85,36 @@ describe('world', function(){
         assert.equal(world.board[1][0].isAlive(), true);
         assert.equal(world.board[0][1].isAlive(), true);
     });
+    it('a living cell with 1 or fewer neighbours dies from loneliness', function(){
+        var world = newWorld();
+        world.generate(3,3);
+        //Initial state
+        world.board[0][0].changeState(true);
+        world.board[1][1].changeState(true);
 
-})
+        assert.equal(world.board[1][0].isAlive(), false);
+        assert.equal(world.board[0][1].isAlive(), false);
+        //world.showBoard();
+        world.tick();
+        //world.showBoard();
+        assert.equal(world.board[0][0].isAlive(), false);
+        assert.equal(world.board[1][1].isAlive(), false);
+        assert.equal(world.board[1][0].isAlive(), true);
+        assert.equal(world.board[0][1].isAlive(), true);
+    });
+    it('a living cell with 4 or more neighbours dies from overcrowding', function(){
+        var world = newWorld();
+        world.generate(4,4);
+        //Initial state
+        world.board[0][0].changeState(true);
+        world.board[0][1].changeState(true);
+        world.board[0][2].changeState(true);
+        world.board[1][0].changeState(true);
+        assert.equal(world.board[1][1].isAlive(), false);
+
+        //world.showBoard();
+        world.tick();
+        //world.showBoard();
+        assert.equal(world.board[1][1].isAlive(), true);
+    });
+});
